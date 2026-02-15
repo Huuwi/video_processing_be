@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug NestJS (Start)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run-script", "start:debug"],
+      "console": "integratedTerminal",
+      "restart": true,
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "pwa-node",
+      "request": "attach",
+      "name": "Debug NestJS (Attach)",
+      "port": 9230,
+      "restart": true
+    }
+  ]
+}
