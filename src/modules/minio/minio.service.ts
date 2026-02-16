@@ -44,4 +44,13 @@ export class MinioService {
   async getFileStream(objectKey: string): Promise<NodeJS.ReadableStream> {
     return await this.client.getObject(this.bucketName, objectKey);
   }
+
+  async deleteFile(objectKey: string): Promise<void> {
+    try {
+      await this.client.removeObject(this.bucketName, objectKey);
+    } catch (error) {
+       console.error(`Error deleting file ${objectKey}:`, error);
+       // Throw error or handle as needed
+    }
+  }
 }

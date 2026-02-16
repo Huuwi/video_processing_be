@@ -107,4 +107,6 @@ export class Video extends Document {
   voice_code: string;
 }
 
+export type VideoDocument = Video & Document;
+
 export const VideoSchema = SchemaFactory.createForClass(Video);

@@ -9,7 +9,8 @@ import { RabbitMQModule } from './modules/rabbitmq/rabbitmq.module';
 import { EditPresetModule } from './modules/edit-preset/edit-preset.module';
 import { FilesModule } from './modules/files/files.module';
 import { PaymentModule } from './modules/payment/payment.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { CleanupModule } from './modules/cleanup/cleanup.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { PaymentModule } from './modules/payment/payment.module';
     EditPresetModule,
     FilesModule,
     PaymentModule,
+    ScheduleModule.forRoot(),
+    CleanupModule,
   ],
   controllers: [AppController],
   providers: [AppService],
