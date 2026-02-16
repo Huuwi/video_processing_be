@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { RabbitMQModule } from './modules/rabbitmq/rabbitmq.module';
 import { EditPresetModule } from './modules/edit-preset/edit-preset.module';
 import { FilesModule } from './modules/files/files.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 
 @Module({
@@ -26,7 +27,10 @@ import { FilesModule } from './modules/files/files.module';
     UserModule,
     RabbitMQModule,
     EditPresetModule,
+    RabbitMQModule,
+    EditPresetModule,
     FilesModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

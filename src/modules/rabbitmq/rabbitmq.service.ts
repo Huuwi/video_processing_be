@@ -10,13 +10,26 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
     await this.connectWithRetry();
   }
 
-  async connectWithRetry(retries = 5, delay = 3000) {
+  async connectWithRetry(retries = 10, delay = 5000) {
     const amqpUrl = process.env.RABBITMQ_URL || 'amqp://guest:guest@localhost:5672';
     
     for (let i = 0; i < retries; i++) {
         try {
             console.log(`Attempting to connect to RabbitMQ (${i + 1}/${retries})...`);
             this.connection = await connect(amqpUrl) as any;
+            
+            this.connection.on('error', (err) => {
+              console.error('RabbitMQ connection error:', err);
+              this.channel = null;
+              this.connectWithRetry();
+            });
+
+            this.connection.on('close', () => {
+              console.warn('RabbitMQ connection closed. Reconnecting...');
+              this.channel = null;
+              this.connectWithRetry();
+            });
+
             this.channel = await this.connection.createChannel();
             
             // Assert queues
@@ -32,9 +45,7 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
         } catch (error) {
             console.error(`Failed to connect to RabbitMQ (Attempt ${i + 1}): ${error.message}`);
             if (i === retries - 1) {
-                console.error('All connection attempts failed');
-                // Don't throw to prevent app crash, just log. 
-                // Or maybe throw if it's critical? Let's just log for now to allow app to start.
+                console.error('All RabbitMQ connection attempts failed');
             }
             await new Promise(res => setTimeout(res, delay));
         }
@@ -48,9 +59,10 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
 
   async sendToQueue(queue: string, message: any) {
       if (!this.channel) {
-          console.error('RabbitMQ channel not available');
-          return;
+          console.error('RabbitMQ channel not available, attempting to send later...');
+          await this.connectWithRetry(1, 0); // Try immediate reconnect
+          if (!this.channel) return;
       }
-      this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+      this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)), { persistent: true });
   }
 }

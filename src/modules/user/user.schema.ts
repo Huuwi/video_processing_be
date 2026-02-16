@@ -18,6 +18,9 @@ export class User {
   @Prop({ default: 0 })
   balance: number;
 
+  @Prop({ default: 0 })
+  total_deposited_vnd: number;
+
   @Prop({ default: 180000 }) // 3 minutes
   remaining_time_ms: number;
 
