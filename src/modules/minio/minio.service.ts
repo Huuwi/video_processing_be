@@ -23,12 +23,13 @@ export class MinioService {
     }
     let url = await this.client.presignedGetObject(this.bucketName, objectKey, expirySeconds, reqParams);
     
-    // If MINIO_PUBLIC_URL is set (e.g., Cloudflare tunnel), replace localhost URL
+    // If MINIO_PUBLIC_URL is set, replace the internal endpoint and bucket prefix
     const publicUrl = process.env.MINIO_PUBLIC_URL;
     if (publicUrl) {
       const minioEndpoint = process.env.MINIO_ENDPOINT || 'localhost';
       const minioPort = process.env.MINIO_PORT || '9000';
-      url = url.replace(`http://${minioEndpoint}:${minioPort}`, publicUrl);
+      const internalPrefix = `http://${minioEndpoint}:${minioPort}/${this.bucketName}`;
+      url = url.replace(internalPrefix, publicUrl);
     }
     
     return url;
