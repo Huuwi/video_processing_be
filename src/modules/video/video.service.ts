@@ -382,7 +382,8 @@ export class VideoService {
         const editConfig = {
           logo: presetConfig.logo || undefined,
           subtitle: presetConfig.subtitle,
-          resize_mode: presetConfig.resize_mode
+          resize_mode: presetConfig.resize_mode,
+          bg_music: presetConfig.bg_music || undefined,
         };
 
         // If video is still downloading, just mark auto_edit flag

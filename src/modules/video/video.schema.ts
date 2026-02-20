@@ -37,6 +37,11 @@ export class UserEditingMeta {
     width_percent: number;
   };
 
+  @Prop({ type: Object })
+  bg_music: {
+    file_key: string;
+  };
+
   @Prop({ default: '9:16' })
   resize_mode: string;
 }
