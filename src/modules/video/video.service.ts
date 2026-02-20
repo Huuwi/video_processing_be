@@ -17,10 +17,8 @@ export class VideoService {
 
   async createVideos(urls: string[], userId: string, userEmail?: string): Promise<Video[]> {
     const videos: Video[] = [];
-    const now = new Date();
-    // Format YYYY-MM-DD HH:mm:ss in Vietnam Time
-    const dateStr = now.toLocaleString('sv-SE', { timeZone: 'Asia/Ho_Chi_Minh' }).replace('T', ' ');
-    const baseTitle = userEmail ? `${userEmail} - ${dateStr}` : `Video - ${dateStr}`;
+    const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit random
+    const baseTitle = `New Video ${randomNum}`;
 
     for (const [index, url] of urls.entries()) {
       const title = urls.length > 1 ? `${baseTitle} (${index + 1})` : baseTitle;
