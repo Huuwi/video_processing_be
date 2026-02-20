@@ -16,6 +16,20 @@ export class MinioService {
     });
   }
 
+  async getPresignedPutUrl(objectKey: string, expirySeconds: number = 3600): Promise<string> {
+    let url = await this.client.presignedPutObject(this.bucketName, objectKey, expirySeconds);
+
+    const publicUrl = process.env.MINIO_PUBLIC_URL;
+    if (publicUrl) {
+      const minioEndpoint = process.env.MINIO_ENDPOINT || 'localhost';
+      const minioPort = process.env.MINIO_PORT || '9000';
+      const internalPrefix = `http://${minioEndpoint}:${minioPort}/${this.bucketName}`;
+      url = url.replace(internalPrefix, publicUrl);
+    }
+
+    return url;
+  }
+
   async getPresignedUrl(objectKey: string, expirySeconds: number = 3600, filename?: string): Promise<string> {
     const reqParams: { [key: string]: any } = {};
     if (filename) {
