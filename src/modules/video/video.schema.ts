@@ -105,6 +105,9 @@ export class Video extends Document {
 
   @Prop()
   voice_code: string;
+
+  @Prop({ default: false })
+  raw_cleaned: boolean;
 }
 
 export type VideoDocument = Video & Document;
