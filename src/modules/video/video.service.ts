@@ -189,27 +189,6 @@ export class VideoService {
     return video.sub?.srt_concatenated || '';
   }
 
-  async retryVideo(videoId: string): Promise<Video | null> {
-    const video = await this.videoModel.findByIdAndUpdate(
-      videoId,
-      {
-        status: VideoStatus.PENDING,
-        stage: VideoStage.DOWNLOAD,
-        $unset: { audio_processed: "", error: "" } // Clear error and previous results
-      },
-      { new: true }
-    );
-
-    if (video) {
-      await this.rabbitMQService.sendToQueue('topic_download', {
-        videoId: video._id,
-        url: video.url,
-      });
-    }
-
-    return video;
-  }
-
   async uploadLogo(videoId: string, fileBuffer: Buffer, filename: string): Promise<{ fileKey: string }> {
     const ext = filename.split('.').pop();
     const timestamp = Date.now();

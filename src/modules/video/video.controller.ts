@@ -129,15 +129,6 @@ export class VideoController {
     }
   }
 
-  @Post(':id/retry')
-  async retryVideo(@Param('id') id: string) {
-    try {
-      return await this.videoService.retryVideo(id);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
   @UseGuards(JwtAuthGuard)
   @Post(':id/upload-logo')
   @UseInterceptors(FileInterceptor('logo'))
