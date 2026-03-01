@@ -139,11 +139,13 @@ export class CleanupService {
    */
   private async deleteRawFilesSafely(video: VideoDocument) {
     const sub = video.sub as any;
+    const videoId = (video._id as any).toString();
     const rawKeys: (string | undefined)[] = [
       sub?.video_origin_mute,
       sub?.sample,
       sub?.final_audio_key,
       ...(sub?.audios?.map((a: any) => a.audio_key) ?? []),
+      sub?.audio_origin_key
     ];
 
     for (const key of rawKeys) {

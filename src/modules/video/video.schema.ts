@@ -94,6 +94,7 @@ export class Video extends Document {
       srt_output: string;
     }>;
     srt_concatenated?: string;
+    audio_origin_key?: string;
   };
 
   @Prop({ type: UserEditingMeta })
