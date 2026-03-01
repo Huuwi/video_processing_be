@@ -54,6 +54,33 @@ export class CleanupService {
     }
   }
 
+  /**
+   * Cron: Runs daily at midnight.
+   *
+   * Responsibilities:
+   * Delete all videos with status 'failed' to save space.
+   */
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleFailedVideosCron() {
+    this.logger.log('Running daily failed videos cleanup job...');
+
+    try {
+      const failedVideos = await this.videoModel.find({
+        status: 'failed',
+      });
+
+      this.logger.log(`Found ${failedVideos.length} failed videos to clean up.`);
+
+      for (const video of failedVideos) {
+        await this.processVideoCleanup(video);
+      }
+
+      this.logger.log('Failed videos cleanup job finished.');
+    } catch (error) {
+      this.logger.error('Failed videos cleanup job failed:', error);
+    }
+  }
+
   private async processVideoCleanup(video: VideoDocument) {
     const videoId = (video._id as any).toString();
     this.logger.log(`Cleaning up video: ${videoId}`);
