@@ -44,6 +44,12 @@ export class UserEditingMeta {
 
   @Prop({ default: '9:16' })
   resize_mode: string;
+
+  @Prop({ default: false })
+  keep_original_audio: boolean;
+
+  @Prop({ default: 'full' })
+  original_audio_mode: string;
 }
 
 @Schema({ timestamps: true })
